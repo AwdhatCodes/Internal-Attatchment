@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Item</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes inputFocus {
+            0% {
+                box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), 0 0 0 rgba(52, 73, 85, 0.3);
+            }
+            100% {
+                box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1), 0 0 8px rgba(52, 73, 85, 0.3);
+            }
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://cdn.pixabay.com/photo/2022/06/24/13/57/woman-7281733_960_720.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #f7f7f7;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* 3D effect */
+            padding: 30px;
+            width: 80%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(0);
+            transition: transform 0.3s;
+            animation: fadeIn 0.6s ease-out; /* Fade-in animation */
+        }
+
+        .container:hover {
+            transform: translateY(-10px); /* Lift effect on hover */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #344955;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #344955;
+        }
+
+        form input, form textarea, form select {
+            margin-bottom: 15px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1); /* Inner shadow for 3D effect */
+            transition: border-color 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.8s ease-out; /* Fade-in animation */
+            animation-delay: 0.3s;
+            animation-fill-mode: backwards;
+        }
+
+        form input:focus, form textarea:focus, form select:focus {
+            border-color: #344955;
+            animation: inputFocus 0.5s forwards; /* Focus animation */
+            outline: none;
+        }
+
+        form button {
+            background-color: #344955;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 3D effect */
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            animation: fadeIn 0.8s ease-out; /* Fade-in animation */
+            animation-delay: 0.5s;
+            animation-fill-mode: backwards;
+        }
+
+        form button:hover {
+            background-color: #232F34;
+            transform: translateY(-2px); /* Lift effect on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Darker shadow on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add New Item</h1>
+        <form action="/add-item" method="POST">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" name="itemName" required>
+
+            <label for="type">Type:</label>
+            <select id="type" name="type" required>
+                <option value="Seed">Seed</option>
+                <option value="Germplasm">Germplasm</option>
+            </select>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" required>
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" rows="4" required></textarea>
+
+            <button type="submit">Add Item</button>
+        </form>
+    </div>
+</body>
+</html>

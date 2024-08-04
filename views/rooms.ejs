@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://cdn.pixabay.com/photo/2022/06/24/13/57/woman-7281733_960_720.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            perspective: 1000px;
+        }
+
+        .sidebar {
+            background-color: rgba(30, 30, 30, 0.9);
+            width: 250px;
+            height: 100vh;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-title {
+            color: #f0f0f0;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: #f0f0f0;
+            text-align: left;
+            padding: 15px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+            border-radius: 8px;
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .sidebar ul li a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+        }
+
+        .sidebar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            transform: perspective(1000px) rotateY(10deg);
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .menu-icon {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin: 15px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #f0f0f0;
+            z-index: 1001;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .menu-icon:hover {
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+            color: #333;
+            flex: 1;
+            margin-left: 0;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar.active + main {
+            margin-left: 250px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            border-radius: 0 0 20px 20px;
+            border-bottom: 2px solid #ddd;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        header:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2.4em;
+            font-weight: 700;
+            color: #333;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #007bff;
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .room-form {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .room-form h2 {
+            margin: 0 0 15px;
+            font-size: 1.8em;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .room-form h2 i {
+            margin-right: 10px;
+        }
+
+        .room-form input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        .room-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .room-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .rooms-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .room {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+        }
+
+        .room h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        .room button.delete-room {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            float: right;
+        }
+
+        .room button.delete-room:hover {
+            background-color: #c82333;
+        }
+
+        .sensor-form {
+            margin-top: 10px;
+        }
+
+        .sensor-form input {
+            width: calc(33% - 10px);
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        .sensor-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sensor-form button:hover {
+            background-color: #218838;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars" id="menuIcon"></i>
+    </div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-title">SEED-CORE</div>
+        <ul>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="/profile"><i class="fas fa-user"></i>Profile</a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i>Settings</a></li>
+            <li><a href="/rooms" class="active"><i class="fas fa-door-open"></i>Rooms</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <header>
+            <h1>Rooms</h1>
+        </header>
+        <p>Manage your rooms here.</p>
+        <div class="room-form">
+            <h2><i class="fas fa-plus"></i>Add Room</h2>
+            <input type="text" id="room-name" placeholder="Room Name">
+            <button onclick="openModal()">Add Room</button>
+        </div>
+        <div id="rooms-list" class="rooms-list"></div>
+    </main>
+
+    <!-- Modal Structure -->
+    <div id="sensor-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Sensor Settings</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <input type="text" id="modal-room-name" placeholder="Room Name">
+            <input type="number" id="modal-temp" placeholder="Temperature (°C)">
+            <input type="number" id="modal-humidity" placeholder="Humidity (%)">
+            <input type="number" id="modal-light" placeholder="Light Intensity (lux)">
+            <button onclick="submitSensorSettings()">Submit</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.getElementById('menuIcon');
+            sidebar.classList.toggle('active');
+            if (sidebar.classList.contains('active')) {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            } else {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRooms();
+        });
+
+        async function fetchRooms() {
+            const response = await fetch('/api/rooms');
+            const rooms = await response.json();
+            renderRooms(rooms);
+        }
+
+        function openModal() {
+            document.getElementById('sensor-modal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('sensor-modal').style.display = 'none';
+        }
+
+        async function submitSensorSettings() {
+            const roomName = document.getElementById('modal-room-name').value;
+            const temp = document.getElementById('modal-temp').value;
+            const humidity = document.getElementById('modal-humidity').value;
+            const light = document.getElementById('modal-light').value;
+            if (roomName && temp && humidity && light) {
+                const response = await fetch('/api/rooms', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: roomName, temperature: temp, humidity: humidity, lightIntensity: light })
+                });
+                const room = await response.json();
+                closeModal();
+                fetchRooms();
+            }
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('sensor-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        async function setSensors(index, id) {
+            const temp = document.getElementById(`temp-${index}`).value;
+            const humidity = document.getElementById(`humidity-${index}`).value;
+            const lightIntensity = document.getElementById(`light-${index}`).value;
+            await fetch(`/api/rooms/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ temperature: temp, humidity: humidity, lightIntensity: lightIntensity })
+            });
+            fetchRooms();
+        }
+
+        async function deleteRoom(id) {
+            await fetch(`/api/rooms/${id}`, {
+                method: 'DELETE'
+            });
+            fetchRooms();
+        }
+
+        function renderRooms(rooms) {
+            const roomsList = document.getElementById('rooms-list');
+            roomsList.innerHTML = '';
+            rooms.forEach((room, index) => {
+                const roomElement = document.createElement('div');
+                roomElement.className = 'room';
+                roomElement.innerHTML = `
+                    <h2>${room.name}</h2>
+                    <button class="delete-room" onclick="deleteRoom('${room._id}')">Delete</button>
+                    <div class="sensor-form">
+                        <h3>Set Sensors</h3>
+                        <input type="number" id="temp-${index}" placeholder="Temperature (°C)" value="${room.temperature}">
+                        <input type="number" id="humidity-${index}" placeholder="Humidity (%)" value="${room.humidity}">
+                        <input type="number" id="light-${index}" placeholder="Light Intensity (lux)" value="${room.lightIntensity}">
+                        <button onclick="setSensors(${index}, '${room._id}')">Set Sensors</button>
+                    </div>
+                `;
+                roomsList.appendChild(roomElement);
+            });
+        }
+    </script>
+</body>
+</html>

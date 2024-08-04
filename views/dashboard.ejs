@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://cdn.pixabay.com/photo/2022/06/24/13/57/woman-7281733_960_720.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            perspective: 1000px; /* Adds perspective for 3D effects */
+        }
+
+        .sidebar {
+            background-color: rgba(30, 30, 30, 0.9); /* Darker translucent */
+            width: 250px;
+            height: 100vh;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 60px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-title {
+            color: #f0f0f0;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: #f0f0f0; /* Light grey text color */
+            text-align: left;
+            padding: 15px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s;
+            border-radius: 8px;
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .sidebar ul li a:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter on hover */
+            color: #ffffff;
+            transform: perspective(1000px) rotateY(10deg); /* 3D effect on hover */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .menu-icon {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin: 15px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #f0f0f0;
+            z-index: 1000;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .menu-icon:hover {
+            color: #ffffff;
+            transform: rotate(90deg); /* Rotate icon on hover */
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+            color: #333;
+            flex: 1;
+            margin-left: 250px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar.active + main {
+            margin-left: 250px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.9); /* Light translucent background */
+            color: #333;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            border-radius: 0 0 20px 20px;
+            border-bottom: 2px solid #ddd;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        header:hover {
+            background: rgba(255, 255, 255, 1); /* Solid background on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Deeper shadow on hover */
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0;
+            font-size: 2.4em;
+            font-weight: 700;
+            color: #333;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: #007bff; /* Blue line under header */
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .dashboard-section {
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            display: inline-block;
+            vertical-align: top;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            background: rgba(255, 255, 255, 0.9); /* Slightly translucent white */
+            transform-style: preserve-3d; /* Enables 3D transformations */
+        }
+
+        .dashboard-section:hover {
+            transform: scale(1.03) rotateY(5deg); /* 3D effect on hover */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-section h2 {
+            margin-top: 0;
+            font-size: 1.6em;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+
+        .dashboard-section h2 i {
+            margin-right: 10px;
+            color: #007bff;
+        }
+
+        .dashboard-section p {
+            font-size: 1em;
+            color: #555;
+        }
+
+        .dashboard-section button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 10px;
+            transform: perspective(1000px) rotateX(0deg);
+        }
+
+        .dashboard-section button:hover {
+            background-color: #0056b3;
+            transform: scale(1.03) rotateX(5deg); /* 3D effect on hover */
+        }
+
+        .profile-section {
+            background: rgba(224, 247, 250, 0.9); /* Light cyan translucent */
+        }
+
+        .notifications-section {
+            background: rgba(255, 249, 196, 0.9); /* Light yellow translucent */
+        }
+
+        .quick-actions-section {
+            background: rgba(200, 230, 201, 0.9); /* Light green translucent */
+        }
+
+        .statistics-section {
+            background: rgba(225, 190, 231, 0.9); /* Light purple translucent */
+        }
+
+        .recent-activities-section {
+            background: rgba(255, 204, 188, 0.9); /* Light orange translucent */
+        }
+
+        .profile-section, .notifications-section, .quick-actions-section, .statistics-section, .recent-activities-section {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 12px;
+            animation: fadeIn 1s ease-out; /* Fade-in animation */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars" id="menuIcon"></i>
+    </div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-title">SEED-CORE</div>
+        <ul>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="/profile"><i class="fas fa-user"></i>Profile</a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i>Settings</a></li>
+            <li><a href="/rooms"><i class="fas fa-door-open"></i>Rooms</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <header>
+            <h1>Dashboard</h1>
+        </header>
+        <p>Welcome to your dashboard for Smart Storage Solutions for Seeds and Germplasm.</p>
+        <div class="dashboard-container">
+            <div class="profile-section dashboard-section">
+                <h2><i class="fas fa-user"></i>User Profile</h2>
+                <p>Name: <%= user.name %></p>
+                <p>Email: <%= user.email %></p>
+            </div>
+            <div class="notifications-section dashboard-section">
+                <h2><i class="fas fa-bell"></i>Notifications</h2>
+                <p>No new notifications.</p>
+                <button onclick="window.location.href='/notifications'">View Notifications</button>
+            </div>
+            <div class="quick-actions-section dashboard-section">
+                <h2><i class="fas fa-bolt"></i>Quick Actions</h2>
+                <button onclick="window.location.href='/inventory'">View Inventory</button>
+                <button onclick="window.location.href='/rooms'">Manage Rooms</button>
+            </div>
+            <div class="statistics-section dashboard-section">
+                <h2><i class="fas fa-chart-line"></i>Statistics</h2>
+                <p>Total Seeds: <%= seedCount %></p>
+                <p>Total Germplasm: <%= germplasmCount %></p>
+            </div>
+            <div class="recent-activities-section dashboard-section">
+                <h2><i class="fas fa-history"></i>Recent Activities</h2>
+                <p>No recent activities.</p>
+                <button onclick="window.location.href='/activities'">View All Activities</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.getElementById('menuIcon');
+            sidebar.classList.toggle('active');
+            if (sidebar.classList.contains('active')) {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            } else {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            }
+        }
+    </script>
+</body>
+</html>

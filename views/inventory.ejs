@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://cdn.pixabay.com/photo/2022/06/24/13/57/woman-7281733_960_720.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        nav {
+            background-color: rgba(0, 0, 0, 0.8);
+            width: 250px;
+            height: 100vh;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transform: translateX(-250px);
+            transition: transform 0.3s ease;
+        }
+
+        nav.active {
+            transform: translateX(0);
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        nav ul li {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        nav ul li a {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: #fff;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 8px;
+            transition: background-color 0.3s, transform 0.3s;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            background-color: #1f2a38;
+        }
+
+        nav ul li a i {
+            margin-right: 12px;
+        }
+
+        main {
+            padding: 20px;
+            margin-left: 250px;
+            transition: margin-left 0.3s;
+            margin-top: 80px; /* Adjusted to account for header height */
+            flex: 1;
+        }
+
+        .inventory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px;
+        }
+
+        .inventory-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .inventory-header button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #1f2a38;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .inventory-header button:hover {
+            background-color: #344955;
+            transform: scale(1.02);
+        }
+
+        .search-bar {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+
+        .search-bar button {
+            width: 20%;
+            padding: 10px;
+            border: none;
+            background-color: #1f2a38;
+            color: #fff;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #344955;
+        }
+
+        .inventory-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .inventory-item {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .inventory-item.seed {
+            background-color: #6d4c41; /* Dark brown for seeds */
+            color: #fff;
+        }
+
+        .inventory-item.germplasm {
+            background-color: #a5d6a7; /* Light green for germplasms */
+        }
+
+        .inventory-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .inventory-item h2 {
+            margin-top: 0;
+            font-size: 1.2em;
+        }
+
+        .inventory-item p {
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        .inventory-item .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .inventory-item button {
+            padding: 8px;
+            border: none;
+            background-color: #1f2a38;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .inventory-item button:hover {
+            background-color: #344955;
+        }
+
+        .menu-icon {
+            font-size: 1.5em;
+            cursor: pointer;
+            margin: 20px;
+            color: #fff;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1100;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-icon" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </div>
+    <nav id="sidebar">
+        <ul>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+            <li><a href="/profile"><i class="fas fa-user"></i>Profile</a></li>
+            <li><a href="/settings"><i class="fas fa-cog"></i>Settings</a></li>
+            <li><a href="/rooms"><i class="fas fa-door-open"></i>Rooms</a></li>
+            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+        </ul>
+    </nav>
+    <main>
+        <header>
+            <h1>Inventory</h1>
+        </header>
+        <div class="inventory-header">
+            <h2>Welcome, <%= user.name %></h2>
+            <button onclick="window.location.href='/add-item'">Add New Item</button>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search by name..." onkeyup="searchInventory()">
+            <button onclick="searchInventory()">Search</button>
+        </div>
+        <div class="inventory-container" id="inventory-container">
+            <% if (inventoryItems.length > 0) { %>
+                <% inventoryItems.forEach(item => { %>
+                    <div class="inventory-item <%= item.type === 'Seed' ? 'seed' : item.type === 'Germplasm' ? 'germplasm' : '' %>">
+                        <h2><%= item.itemName %></h2>
+                        <p>Type: <%= item.type %></p>
+                        <p>Quantity: <%= item.quantity %></p>
+                        <p>Description: <%= item.description %></p>
+                        <p>Added on: <%= item.timestamp.toLocaleString() %></p>
+                        <div class="actions">
+                            <button onclick="viewItem('<%= item._id %>')">View</button>
+                            <button onclick="deleteItem('<%= item._id %>')">Delete</button>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No inventory items found.</p>
+            <% } %>
+        </div>
+    </main>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('main').classList.toggle('shift');
+        }
+
+        function searchInventory() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const items = document.querySelectorAll('.inventory-item');
+            items.forEach(item => {
+                const name = item.querySelector('h2').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function viewItem(itemId) {
+            window.location.href = `/view-item/${itemId}`;
+        }
+
+        function deleteItem(itemId) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                fetch(`/delete-item/${itemId}`, {
+                    method: 'DELETE'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        alert('Failed to delete item');
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            padding: 0;
+        }
+
+        nav {
+            margin: 20px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        nav ul li {
+            float: left;
+        }
+
+        nav ul li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            background-color: #111;
+        }
+
+        main {
+            padding: 20px;
+            text-align: center;
+        }
+
+        main p {
+            font-size: 1.2em;
+        }
+
+        .room-details {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: white;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sensor-data {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .sensor-data h3 {
+            margin-bottom: 5px;
+        }
+
+        .sensor-data ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sensor-data ul li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Room Report</h1>
+        <nav>
+            <ul>
+                
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/settings">Settings</a></li>
+                <li><a href="/rooms">Rooms</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="room-details">
+            <h2>Room Details</h2>
+            <div class="sensor-data">
+                <h3>Sensors Data</h3>
+                <ul>
+                    <li>Temperature: <%= room.temperature %> °C</li>
+                    <li>Humidity: <%= room.humidity %> %</li>
+                    <li>Light Intensity: <%= room.lightIntensity %> lumens</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
